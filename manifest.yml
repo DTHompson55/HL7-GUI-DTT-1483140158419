@@ -1,0 +1,8 @@
+applications:
+- path: .
+  memory: 256M
+  instances: 1
+  domain: mybluemix.net
+  name: HL7-GUI-DTT
+  host: HL7-GUI-DTT
+  disk_quota: 1024M
