@@ -2,25 +2,220 @@
 <html>
 
   <head>
-    <title>NodeJS Starter Application</title>
+    <title>HL7 Test Harness</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="stylesheets/style.css">
-  </head>
+    <link rel="stylesheet" href="stylesheets/jquery-ui.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ 
+     
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <script>
+    var historyCounter = 1;
+    var HL7Data = {
+    		ReqType: "XXX",
+    		ReqBody: "YYY",
+    		FileName: "ZZZ",
+    		HL7: "data"
+    };
+    
+    var fetchHL7 = function fetchHL7File(fnam){
+    	console.log("Fetch HL7 "+fnam);
+    	HL7Data.FileName = fnam;
+    	$.ajax({
 
+    	    // The URL for the request
+    	    url: "/api/fetchHL7",
+    	 
+    	    // The data to send (will be converted to a query string)
+    	    data: JSON.stringify(HL7Data),
+    	 
+    	    // Whether this is a POST or GET request
+    	    type: "POST",
+    	 
+    	    // The type of data we expect back
+    	    dataType : "json",
+    	    
+    	    contentType: 'application/json'
+    	})
+    	  // Code to run if the request succeeds (is done);
+    	  // The response is passed to the function
+    	  .done(function( json ) {
+    		  console.log(json);
+    		  console.log(JSON.stringify(json));
+			$('#HL7Text').val(json.HL7);
+    	  })
+    	  // Code to run if the request fails; the raw request and
+    	  // status codes are passed to the function
+    	  .fail(function( xhr, status, errorThrown ) {
+    	    console.log( "Sorry, there was a problem!" );
+    	    console.log( "Error: " + errorThrown );
+    	    console.log( "Status: " + status );
+    	    console.dir( xhr );
+    	  })
+    	  // Code to run regardless of success or failure;
+    	  .always(function( xhr, status ) {
+    		  console.log( "The request is complete!" );
+    	  });
+    }
+        //
+        // on document ready...
+        //
+    
+    $(function(){
+    $('#B1').click(function(){
+    	console.log("Upload HL7");
+       	$.ajax({
+       		
+    	    // The URL for the request
+    	    url: "/api/uploadHL7",
+    	 
+    	    // The data to send (will be converted to a query string)
+    	    data: {some: "data"},
+    	 
+    	    // Whether this is a POST or GET request
+    	    type: "POST",
+    	 
+    	    // The type of data we expect back
+    	    dataType : "json",
+    	    
+    	    contentType: 'application/json'
+    	})
+    	 .done(function( json ) {
+    	  // Code to run if the request succeeds (is done);
+    	  // The response is passed to the function
+			console.log("Fileupload Done");
+    	  })
+    	  // Code to run if the request fails; the raw request and
+    	  // status codes are passed to the function
+    	  .fail(function( xhr, status, errorThrown ) {
+    	    console.log( "Sorry, there was an upload problem!" );
+    	    console.log( "Error: " + errorThrown );
+    	    console.log( "Status: " + status );
+    	    console.dir( xhr );
+    	  })
+    	  // Code to run regardless of success or failure;
+    	  .always(function( xhr, status ) {
+    		  console.log( "The upload request is complete!" );
+    	  });
+
+    
+    });
+
+    $('#B1a').click(function(){
+    	console.log("Clear History");
+    	historyCounter = 1;
+    });
+
+    $('#B3').click(function(){
+    	console.log("Sending HL7");
+    	HL7Data.ReqBody = $('#HL7Text').val();
+    	s =  HL7Data.ReqBody;
+    	crlfIndex = s.indexOf("\n");
+    	ormIndex = s.indexOf("ORM");
+    	oruIndex = s.indexOf("ORU");
+    	fshIndex = s.indexOf("FSH");
+    	
+    	console.log("crlf = "+crlfIndex);
+    	if ( ormIndex >= 0 &&  ormIndex < crlfIndex ) HL7Data.ReqType = "ORM";
+    	if ( oruIndex >= 0 &&  oruIndex < crlfIndex ) HL7Data.ReqType = "ORU";
+    	if ( fshIndex == 0 &&  fshIndex < 3 ) alert ("FSH Record Type");
+
+    	console.log("FSH = "+fshIndex);
+    	
+    	var sendHL7 = $.ajax({
+
+    	    // The URL for the request
+    	    url: "/api/sendHL7",
+    	 
+    	    // The data to send (will be converted to a query string)
+    	    data: JSON.stringify(HL7Data),
+    	 
+    	    // Whether this is a POST or GET request
+    	    type: "POST",
+    	 
+    	    // The type of data we expect back
+    	    dataType : "json",
+    	    
+    	    contentType: 'application/json'
+    	})
+    	  // Code to run if the request succeeds (is done);
+    	  // The response is passed to the function
+    	  .done(function( json ) {
+    	     $( "<div class=\"content\">").html( "#"+historyCounter+" "+json.html ).insertAfter( "#history" );
+    	     historyCounter++;
+    	  })
+    	  // Code to run if the request fails; the raw request and
+    	  // status codes are passed to the function
+    	  .fail(function( xhr, status, errorThrown ) {
+    	    console.log( "Sorry, there was a problem!" );
+    	    console.log( "Error: " + errorThrown );
+    	    console.log( "Status: " + status );
+    	    console.dir( xhr );
+    	  })
+    	  // Code to run regardless of success or failure;
+    	  .always(function( xhr, status ) {
+    		  console.log( "The request is complete!" );
+    	  });
+    
+    });
+    $('#B4').click(function(){
+    	console.log("Saving HL7");
+    });
+  });
+</script>
+  </head>
   <body>
-    <table>
-      <tr>
-        <td style= "width:30%;">
-          <img class = "newappIcon" src="images/newapp-icon.png">
-        </td>
-        <td>
-          <h1 id="message">Hello World!</h1>
-          <p class='description'></p> Thanks for creating a <span class = "blue">NodeJS Starter Application</span>.
-        </td>
-      </tr>
-    </table>
-  </body>
+      <div>
+      <h1 id="message">HL7 Test Harness</h1>
+      <p class='description'></p>Enter HL7 Document here: 
+      <p> <textarea style="width: 100%; height: 152px" id="HL7Text">
+MSH|^~||||AT|||ORM^A^M|1^U^3101483
+PID|1|123^|RB999998A^^^ACCN||TEST^REFERRALS^||^19610101|F^|||^^^^|||||||123||
+PV1|1||^^^|||||||||||||||||||||||||||||||||||Y|||||||
+ORC|NW||||||PE~1^SS~2^IC~1^OT=CARD~1^L~1||201607061355^|||^^^PAIC|AT||201609090600|N|HQTEST|J|HQDB03^HQDB03||^^FX^^^^^^^|CLIN|
+OBR|1|RB999998A||899SB=^^99QDI^5600000899^899SB=^^^^^|||||||A||||||||AT|T||||||
+ZSI|01|^^^5600000899|1^1|SPECLBL|IC||||N^N^^0|899SB=</textarea> </p>
+     </div>
+
+ <div class="widget"> 
+  <input class="ui-button ui-widget ui-corner-all" type="button" value="Send HL7" id="B3" > 
+  <input class="ui-button ui-widget ui-corner-all" type="button" value="Clear History" id="B3a" >
+  </div>
+<hr>
+
+<h1>Fetch</h1>
+&nbsp;<a href='javascript:fetchHL7("ORM.1.txt")'>ORM.1.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORM.2.txt")'>ORM.2.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORM.3.txt")'>ORM.3.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORM.4.txt")'>ORM.4.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORM.5.txt")'>ORM.5.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORM.6.txt")'>ORM.6.txt</a>
+<hr>
+&nbsp;<a href='javascript:fetchHL7("ORU.1.txt")'>ORU.1.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORU.2.txt")'>ORU.2.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORU.3.txt")'>ORU.3.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORU.4.txt")'>ORU.4.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORU.5.txt")'>ORU.5.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORU.6.txt")'>ORU.6.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORU.7.txt")'>ORU.7.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORU.8.txt")'>ORU.8.txt</a>
+&nbsp;<a href='javascript:fetchHL7("ORU.9.txt")'>ORU.9.txt</a>
+<hr>
+<div id="uploads">Custom uploads</div>
+<form method="post" enctype="multipart/form-data" action="api/uploadHL7">
+<input type="file" name="HL7FileUpload" >
+<input type="submit"/>
+</form>
+<hr>
+<div id="customUploadsArea"></div>
+<hr>
+<div id="history"></div>
+
+</body>
 
 </html>

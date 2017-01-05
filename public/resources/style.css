@@ -1,0 +1,40 @@
+/*! Project.css
+* Copyright jQuery Foundation and other contributors; Licensed MIT */
+
+.dtt-draggable-handle {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+
+textarea  
+{  
+   font-family:"Courier New", Courier, monospaced;  
+   font-size: 12px;   
+}
+
+.alignleft  
+{  
+	float: left
+}
+
+.alignleft  
+{  
+	float: right
+}
+
+body {
+    background-color: lightblue;
+}
+
+h1 {
+    color: black;
+    text-align: left;
+}
+
+p textarea {
+    font-family: "Courier New", Courier, monospaced;  
+    font-size: 10px;
+    width: 100%;
+    height: 100px;
+    overflow-y: scroll;
+}

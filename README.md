@@ -1,14 +1,16 @@
-# Node.js Starter Overview
+# Node.js HL7 Test Harness
 
-The Node.js Starter demonstrates a simple, reusable Node.js web application based on the Express framework.
+HL7 Test Harness pushes HL7 content to an IIB implementated SOAP service
+It has ability to choose several ORM and ORU documents and send them.
+In the current release you can upload new HL7 documents, but you do anything with them yet.
+
+Future planes:
+ - finish
+  - fileupload renaming
+  - fileupload redirection back to index.html
+  - show the new files that have been uploaded
+  - be able save edits to HL7 files to a new name.
+  - listen for async results from IIB and post them to the UI
 
 ## Run the app locally
 
-1. [Install Node.js][]
-2. Download and extract the starter code from the Bluemix UI
-3. cd into the app directory
-4. Run `npm install` to install the app's dependencies
-5. Run `npm start` to start the app
-6. Access the running app in a browser at http://localhost:6001
-
-[Install Node.js]: https://nodejs.org/en/download/

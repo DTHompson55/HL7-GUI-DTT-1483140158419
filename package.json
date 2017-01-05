@@ -1,5 +1,5 @@
 {
-	"name": "NodejsStarterApp",
+	"name": "HL7TestHarness",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -7,7 +7,10 @@
 	},
 	"dependencies": {
 		"express": "4.13.x",
-		"cfenv": "1.0.x"
+		"cfenv": "1.0.x",
+	    "body-parser": "1.15.x",
+	    "soap": "0.19.x",
+	    "multer": "0.1.x"
 	},
 	"repository": {},
 	"engines": {
